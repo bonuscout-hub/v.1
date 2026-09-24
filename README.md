@@ -21,3 +21,10 @@ GitHub Pages will redeploy after the commit.
 
 ## Important
 This is a rapidly changing database. Re-verify offers regularly, especially sportsbooks, bank bonuses, credit-card welcome offers, and subscription trials.
+
+
+## Consumer-facing cleanup
+- Removed affiliate/referral-count and hosting-cost stats from the homepage.
+- Removed the Partner Ready Monetization section from the public site.
+- Added Visitors, Offers Completed, and Estimated Rewards Earned counters.
+- See `SUPABASE_SETUP.md` to turn those into free community-wide counters.
