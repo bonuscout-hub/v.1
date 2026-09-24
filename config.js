@@ -1,4 +1,3 @@
-window.BONUS_SCOUT_CONFIG = {
-  SUPABASE_URL: "",
-  SUPABASE_ANON_KEY: ""
-};
+// Reserved for the future live community-counter backend.
+// No setup is required for the website to work right now.
+window.BONUS_SCOUT_CONFIG = {};

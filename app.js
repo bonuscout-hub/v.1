@@ -8,9 +8,8 @@ const scoutText=o=>o.scout_value==null?'Estimate pending':money(o.scout_value);
 
 async function init(){
   OFFERS=await fetch('offers.json').then(r=>r.json());
-  await initCommunityCounters();
   document.getElementById('heroCount').textContent=OFFERS.length+'+';
-  buildFilters(); renderOffers(); renderDash();
+  buildFilters(); renderOffers(); renderDash(); renderCommunityCounters();
   document.getElementById('search').oninput=()=>{visible=24;renderOffers()};
   document.getElementById('sort').onchange=()=>{visible=24;renderOffers()};
   document.getElementById('loadMore').onclick=()=>{visible+=24;renderOffers()};
@@ -60,11 +59,7 @@ function start(id){
  localStorage.setItem(CLICKS,JSON.stringify(clicks));
  window.open(o.affiliate_url||o.official_url,'_blank','noopener,noreferrer');
 }
-function complete(id){
- const before=getP()[id];
- track(id,'completed');
- if(before!=='completed') recordCommunityCompletion(id);
-}
+function complete(id){track(id,'completed');renderCommunityCounters()}
 function removeTracked(id){const p=getP();delete p[id];setP(p);renderDash()}
 function renderDash(){
  const p=getP();
@@ -78,74 +73,21 @@ function renderDash(){
  document.getElementById('dashboardBody').innerHTML=items.length?items.map(o=>`<div class="offer-row"><div><b>${o.brand}</b><div class="muted">${o.title}</div></div><div>${scoutText(o)}<div class="muted">Scout Value</div></div><div><span class="status">${p[o.id]}</span></div><div>${p[o.id]==='started'?`<button class="btn primary small" onclick="complete('${o.id}')">Complete</button>`:''} <button class="btn secondary small" onclick="removeTracked('${o.id}')">Remove</button></div></div>`).join(''):'<div class="empty">Your Stash is empty. Save or start an offer above.</div>';
 }
 
-let BS_SUPABASE=null;
-function formatCounter(n,moneyMode=false){
- if(n===null||n===undefined||Number.isNaN(Number(n))) return '—';
- const num=Number(n);
- if(moneyMode){
-   if(num>=1000000)return '$'+(num/1000000).toFixed(num>=10000000?0:1)+'M';
-   if(num>=1000)return '$'+(num/1000).toFixed(num>=10000?0:1)+'K';
-   return '$'+Math.round(num).toLocaleString();
- }
- if(num>=1000000)return (num/1000000).toFixed(num>=10000000?0:1)+'M';
- if(num>=1000)return (num/1000).toFixed(num>=10000?0:1)+'K';
- return Math.round(num).toLocaleString();
-}
-function getVisitorId(){
- const key='bonusScoutAnonymousVisitorId';
- let id=localStorage.getItem(key);
- if(!id){
-   id=(crypto.randomUUID?crypto.randomUUID():'v-'+Date.now()+'-'+Math.random().toString(36).slice(2));
-   localStorage.setItem(key,id);
- }
- return id;
-}
-function setCounterStatus(msg){const el=document.getElementById('counterStatus');if(el)el.textContent=msg}
-function renderLocalCounters(){
- const p=getP();
- const completed=OFFERS.filter(o=>p[o.id]==='completed');
- const value=completed.reduce((s,o)=>s+(o.scout_value||0),0);
- document.getElementById('visitorCount').textContent='1';
- document.getElementById('completedCount').textContent=formatCounter(completed.length);
- document.getElementById('earnedCount').textContent=formatCounter(value,true);
- setCounterStatus('Preview mode · connect Supabase to show community-wide totals.');
-}
-async function initCommunityCounters(){
- try{
-   const cfg=window.BONUS_SCOUT_CONFIG||{};
-   if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY||!window.supabase){
-     renderLocalCounters(); return;
-   }
-   BS_SUPABASE=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);
-   const visitorId=getVisitorId();
-   await BS_SUPABASE.from('bs_visitors').upsert({visitor_id:visitorId,last_seen:new Date().toISOString()},{onConflict:'visitor_id'});
-   await refreshCommunityCounters();
- }catch(err){console.warn(err);renderLocalCounters()}
-}
-async function recordCommunityCompletion(id){
- if(!BS_SUPABASE){renderLocalCounters();return}
- try{
-   const o=OFFERS.find(x=>x.id===id); if(!o)return;
-   await BS_SUPABASE.from('bs_completions').upsert({
-     visitor_id:getVisitorId(),offer_id:id,scout_value:Number(o.scout_value||0),completed_at:new Date().toISOString()
-   },{onConflict:'visitor_id,offer_id'});
-   await refreshCommunityCounters();
- }catch(err){console.warn(err)}
-}
-async function refreshCommunityCounters(){
- try{
-   const [v,c]=await Promise.all([
-     BS_SUPABASE.from('bs_visitors').select('*',{count:'exact',head:true}),
-     BS_SUPABASE.from('bs_completions').select('scout_value')
-   ]);
-   if(v.error)throw v.error;if(c.error)throw c.error;
-   const rows=c.data||[];
-   const total=rows.reduce((s,r)=>s+Number(r.scout_value||0),0);
-   document.getElementById('visitorCount').textContent=formatCounter(v.count||0);
-   document.getElementById('completedCount').textContent=formatCounter(rows.length);
-   document.getElementById('earnedCount').textContent=formatCounter(total,true);
-   setCounterStatus('Community totals · updated automatically.');
- }catch(err){console.warn(err);renderLocalCounters()}
+function renderCommunityCounters(){
+  const visitor=document.getElementById('visitorCount');
+  const completedEl=document.getElementById('completedCount');
+  const earnedEl=document.getElementById('earnedCount');
+  const statusEl=document.getElementById('counterStatus');
+  if(!visitor||!completedEl||!earnedEl) return;
+
+  const p=getP();
+  const completed=OFFERS.filter(o=>p[o.id]==='completed');
+  const total=completed.reduce((sum,o)=>sum+Number(o.scout_value||0),0);
+
+  visitor.textContent='1';
+  completedEl.textContent=completed.length.toLocaleString();
+  earnedEl.textContent='$'+Math.round(total).toLocaleString();
+  if(statusEl) statusEl.textContent='Preview mode · connect Supabase later for community-wide totals.';
 }
 
 window.addEventListener('DOMContentLoaded',init);
