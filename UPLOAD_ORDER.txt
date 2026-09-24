@@ -1,0 +1,61 @@
+BONUS SCOUT — GITHUB UPLOAD ORDER
+
+Upload these files to the ROOT of your GitHub repository:
+
+1. index.html
+2. styles.css
+3. app.js
+4. offers.json
+5. config.js
+6. .nojekyll
+
+Do NOT upload the ZIP itself.
+Do NOT put these files inside another folder.
+index.html must be visible at the top level of the repository.
+
+After all six files are uploaded:
+- Commit changes to main
+- Wait 1–3 minutes for GitHub Pages to redeploy
+- Refresh the site with Cmd+Shift+R (Mac) or Ctrl+Shift+R (Windows)
+
+The site will work immediately with:
+- 113 offers
+- Search
+- Category filters
+- Sorting
+- Load more
+- Start Offer
+- Your Stash
+- Local preview counters
+
+Later, the counters can be connected to Supabase for global visitor/completion totals.
+
+
+THIS BUILD NOW CONTAINS 120 TOTAL OFFERS.
+New Mystery Packs category includes:
+- CrownCards
+- Arena Club
+- GameStop Digital Power Packs
+- GameStop Physical Power Packs
+- Packz
+- ClutchPacks
+- Trove
+
+You do NOT need to upload MYSTERY_PACK_MONETIZATION.txt for the website to function.
+It is included only as your private reference.
+
+
+MYSTERY PACK MEGA EXPANSION
+- Previous total: 120
+- New total: 160
+- No previous offers were removed.
+- Mystery Packs now includes the broad collectible-rip ecosystem found in the Sept. 24, 2026 research sweep.
+
+Upload the same website files as before.
+MYSTERY_PACK_MEGA_REFERENCE.txt is for your reference only and is not required for the site.
+
+
+MYSTERY PACKS BONUS-ONLY UPDATE
+- Only mystery-pack entries with a verified current bonus, signup offer, free pack/box, discount, or signup credit were kept.
+- Removed 34 mystery-pack listings that did not have a verified current bonus.
+- Remaining mystery-pack listings: 13
