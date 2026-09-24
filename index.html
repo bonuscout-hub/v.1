@@ -25,12 +25,29 @@
 <div class="money" id="heroCount">100+</div>
 <div class="muted">Verified and source-linked opportunities</div>
 <div class="stats community-stats">
-      <div class="stat"><strong id="visitorCount">—</strong><span class="muted">Visitors</span></div>
-      <div class="stat"><strong id="completedCount">—</strong><span class="muted">Offers completed</span></div>
-      <div class="stat"><strong id="earnedCount">—</strong><span class="muted">Est. rewards earned</span></div>
-    </div>
-    <div id="counterStatus" class="counter-status">Community counters update when connected to the free analytics backend.</div>
-    </aside>
+  <div class="stat"><strong id="visitorCount">—</strong><span class="muted">Visitors</span></div>
+  <div class="stat"><strong id="completedCount">—</strong><span class="muted">Offers completed</span></div>
+  <div class="stat"><strong id="earnedCount">—</strong><span class="muted">Est. rewards earned</span></div>
+</div>
+<div id="counterStatus" class="counter-status">Community counters update when connected to the free analytics backend.</div>
+</aside>
+</section>
+
+<section class="section" id="offers"><div class="container">
+<div class="section-head"><div><div class="muted">Live database</div><h2>Scout every offer</h2></div><div id="resultCount" class="muted"></div></div>
+<div class="toolbar">
+<input id="search" class="search" placeholder="Search company, card, bonus, category…">
+<select id="sort" class="select"><option value="score">Sort: Scout Score</option><option value="value">Advertised value</option><option value="lowspend">Lowest spend</option><option value="newest">Recently verified</option></select>
+</div>
+<div id="filters" class="filters"></div>
+<div id="offerGrid" class="grid"></div>
+<div id="loadMoreWrap" class="loadmore"><button id="loadMore" class="btn secondary">Load more offers</button></div>
+</div></section>
+
+<section class="section" id="dashboard"><div class="container">
+<div class="section-head"><div><div class="muted">Your account</div><h2>Your Stash</h2></div><div class="muted">Saved locally on this device</div></div>
+<div class="dashboard">
+<aside class="panel side"><div class="kpi"><span>Completed Scout Value</span><strong id="earned">$0</strong></div><div class="kpi"><span>Pending Scout Value</span><strong id="pending">$0</strong></div><div class="kpi"><span>Tracked offers</span><strong id="trackedCount">0</strong></div></aside>
 <div class="panel"><div class="tabs"><button class="tab active" data-tab="all">All</button><button class="tab" data-tab="saved">Saved</button><button class="tab" data-tab="started">Started</button><button class="tab" data-tab="completed">Completed</button></div><div id="dashboardBody"></div></div>
 </div>
 </div></section>

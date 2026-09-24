@@ -7,11 +7,9 @@ const money=n=>n==null?'—':'$'+Number(n).toLocaleString(undefined,{maximumFrac
 const scoutText=o=>o.scout_value==null?'Estimate pending':money(o.scout_value);
 
 async function init(){
-  await initCommunityCounters();
   OFFERS=await fetch('offers.json').then(r=>r.json());
+  await initCommunityCounters();
   document.getElementById('heroCount').textContent=OFFERS.length+'+';
-  document.getElementById('categoryCount').textContent=new Set(OFFERS.map(o=>o.category)).size;
-  document.getElementById('affCount').textContent=OFFERS.filter(o=>o.affiliate_program_url||o.referral_program_url||o.affiliate_url).length;
   buildFilters(); renderOffers(); renderDash();
   document.getElementById('search').oninput=()=>{visible=24;renderOffers()};
   document.getElementById('sort').onchange=()=>{visible=24;renderOffers()};
@@ -63,9 +61,9 @@ function start(id){
  window.open(o.affiliate_url||o.official_url,'_blank','noopener,noreferrer');
 }
 function complete(id){
-  const before=getP()[id];
-  track(id,'completed');
-  if(before!=='completed') recordCommunityCompletion(id);
+ const before=getP()[id];
+ track(id,'completed');
+ if(before!=='completed') recordCommunityCompletion(id);
 }
 function removeTracked(id){const p=getP();delete p[id];setP(p);renderDash()}
 function renderDash(){
@@ -81,113 +79,73 @@ function renderDash(){
 }
 
 let BS_SUPABASE=null;
-
-function formatCounter(n, moneyMode=false){
-  if(n===null || n===undefined || Number.isNaN(Number(n))) return '—';
-  const num=Number(n);
-  if(moneyMode){
-    if(num>=1000000) return '$'+(num/1000000).toFixed(num>=10000000?0:1)+'M';
-    if(num>=1000) return '$'+(num/1000).toFixed(num>=10000?0:1)+'K';
-    return '$'+Math.round(num).toLocaleString();
-  }
-  if(num>=1000000) return (num/1000000).toFixed(num>=10000000?0:1)+'M';
-  if(num>=1000) return (num/1000).toFixed(num>=10000?0:1)+'K';
-  return Math.round(num).toLocaleString();
+function formatCounter(n,moneyMode=false){
+ if(n===null||n===undefined||Number.isNaN(Number(n))) return '—';
+ const num=Number(n);
+ if(moneyMode){
+   if(num>=1000000)return '$'+(num/1000000).toFixed(num>=10000000?0:1)+'M';
+   if(num>=1000)return '$'+(num/1000).toFixed(num>=10000?0:1)+'K';
+   return '$'+Math.round(num).toLocaleString();
+ }
+ if(num>=1000000)return (num/1000000).toFixed(num>=10000000?0:1)+'M';
+ if(num>=1000)return (num/1000).toFixed(num>=10000?0:1)+'K';
+ return Math.round(num).toLocaleString();
 }
-
 function getVisitorId(){
-  const key='bonusScoutAnonymousVisitorId';
-  let id=localStorage.getItem(key);
-  if(!id){
-    id=(crypto.randomUUID ? crypto.randomUUID() : 'v-'+Date.now()+'-'+Math.random().toString(36).slice(2));
-    localStorage.setItem(key,id);
-  }
-  return id;
+ const key='bonusScoutAnonymousVisitorId';
+ let id=localStorage.getItem(key);
+ if(!id){
+   id=(crypto.randomUUID?crypto.randomUUID():'v-'+Date.now()+'-'+Math.random().toString(36).slice(2));
+   localStorage.setItem(key,id);
+ }
+ return id;
 }
-
-function setCounterStatus(msg){
-  const el=document.getElementById('counterStatus');
-  if(el) el.textContent=msg;
-}
-
+function setCounterStatus(msg){const el=document.getElementById('counterStatus');if(el)el.textContent=msg}
 function renderLocalCounters(){
-  const localVisitor=1;
-  const p=getP();
-  const completed=OFFERS.filter(o=>p[o.id]==='completed');
-  const value=completed.reduce((s,o)=>s+(o.scout_value||0),0);
-  document.getElementById('visitorCount').textContent=formatCounter(localVisitor);
-  document.getElementById('completedCount').textContent=formatCounter(completed.length);
-  document.getElementById('earnedCount').textContent=formatCounter(value,true);
-  setCounterStatus('Preview mode · connect Supabase to show community-wide totals.');
+ const p=getP();
+ const completed=OFFERS.filter(o=>p[o.id]==='completed');
+ const value=completed.reduce((s,o)=>s+(o.scout_value||0),0);
+ document.getElementById('visitorCount').textContent='1';
+ document.getElementById('completedCount').textContent=formatCounter(completed.length);
+ document.getElementById('earnedCount').textContent=formatCounter(value,true);
+ setCounterStatus('Preview mode · connect Supabase to show community-wide totals.');
 }
-
 async function initCommunityCounters(){
-  try{
-    const cfg=window.BONUS_SCOUT_CONFIG||{};
-    if(!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY || !window.supabase){
-      setTimeout(renderLocalCounters,0);
-      return;
-    }
-    BS_SUPABASE=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);
-
-    const visitorId=getVisitorId();
-    await BS_SUPABASE.from('bs_visitors').upsert(
-      {visitor_id:visitorId,last_seen:new Date().toISOString()},
-      {onConflict:'visitor_id'}
-    );
-    await refreshCommunityCounters();
-  }catch(err){
-    console.warn('Bonus Scout counters unavailable',err);
-    setTimeout(renderLocalCounters,0);
-  }
+ try{
+   const cfg=window.BONUS_SCOUT_CONFIG||{};
+   if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY||!window.supabase){
+     renderLocalCounters(); return;
+   }
+   BS_SUPABASE=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);
+   const visitorId=getVisitorId();
+   await BS_SUPABASE.from('bs_visitors').upsert({visitor_id:visitorId,last_seen:new Date().toISOString()},{onConflict:'visitor_id'});
+   await refreshCommunityCounters();
+ }catch(err){console.warn(err);renderLocalCounters()}
 }
-
 async function recordCommunityCompletion(id){
-  if(!BS_SUPABASE){
-    renderLocalCounters();
-    return;
-  }
-  try{
-    const o=OFFERS.find(x=>x.id===id);
-    if(!o) return;
-    const visitorId=getVisitorId();
-    // Unique completion per browser + offer prevents repeated Complete clicks from inflating totals.
-    await BS_SUPABASE.from('bs_completions').upsert(
-      {
-        visitor_id:visitorId,
-        offer_id:id,
-        scout_value:Number(o.scout_value||0),
-        completed_at:new Date().toISOString()
-      },
-      {onConflict:'visitor_id,offer_id'}
-    );
-    await refreshCommunityCounters();
-  }catch(err){
-    console.warn('Could not record completion',err);
-  }
+ if(!BS_SUPABASE){renderLocalCounters();return}
+ try{
+   const o=OFFERS.find(x=>x.id===id); if(!o)return;
+   await BS_SUPABASE.from('bs_completions').upsert({
+     visitor_id:getVisitorId(),offer_id:id,scout_value:Number(o.scout_value||0),completed_at:new Date().toISOString()
+   },{onConflict:'visitor_id,offer_id'});
+   await refreshCommunityCounters();
+ }catch(err){console.warn(err)}
 }
-
 async function refreshCommunityCounters(){
-  if(!BS_SUPABASE) return;
-  try{
-    const [visitorsRes, completionsRes]=await Promise.all([
-      BS_SUPABASE.from('bs_visitors').select('*',{count:'exact',head:true}),
-      BS_SUPABASE.from('bs_completions').select('scout_value')
-    ]);
-    if(visitorsRes.error) throw visitorsRes.error;
-    if(completionsRes.error) throw completionsRes.error;
-
-    const completions=completionsRes.data||[];
-    const totalValue=completions.reduce((sum,row)=>sum+Number(row.scout_value||0),0);
-
-    document.getElementById('visitorCount').textContent=formatCounter(visitorsRes.count||0);
-    document.getElementById('completedCount').textContent=formatCounter(completions.length);
-    document.getElementById('earnedCount').textContent=formatCounter(totalValue,true);
-    setCounterStatus('Community totals · updated automatically.');
-  }catch(err){
-    console.warn('Could not refresh counters',err);
-    renderLocalCounters();
-  }
+ try{
+   const [v,c]=await Promise.all([
+     BS_SUPABASE.from('bs_visitors').select('*',{count:'exact',head:true}),
+     BS_SUPABASE.from('bs_completions').select('scout_value')
+   ]);
+   if(v.error)throw v.error;if(c.error)throw c.error;
+   const rows=c.data||[];
+   const total=rows.reduce((s,r)=>s+Number(r.scout_value||0),0);
+   document.getElementById('visitorCount').textContent=formatCounter(v.count||0);
+   document.getElementById('completedCount').textContent=formatCounter(rows.length);
+   document.getElementById('earnedCount').textContent=formatCounter(total,true);
+   setCounterStatus('Community totals · updated automatically.');
+ }catch(err){console.warn(err);renderLocalCounters()}
 }
 
 window.addEventListener('DOMContentLoaded',init);
