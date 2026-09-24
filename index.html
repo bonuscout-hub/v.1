@@ -1,29 +1,60 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bonus Scout — We scout. You earn.</title><meta name="description" content="Discover verified signup bonuses and track them from start to reward."><link rel="stylesheet" href="styles.css"></head>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bonus Scout — Find signup bonuses and track your stash</title>
+<meta name="description" content="Discover verified signup offers, welcome bonuses, trials, and referral opportunities from official sources.">
+<link rel="stylesheet" href="styles.css">
+</head>
 <body>
-<nav><div class="container nav"><a href="#" class="brand"><span class="logo">⌖</span>Bonus Scout</a><div class="navlinks"><a href="#offers">Offers</a><a href="#dashboard">Your Stash</a><button class="btn primary" onclick="document.querySelector('#offers').scrollIntoView()">Scout Offers</button></div></div></nav>
+<nav><div class="container nav">
+<a class="brand" href="#"><span class="logo">⌖</span>Bonus Scout</a>
+<div class="navlinks"><a href="#offers">Offers</a><a href="#dashboard">Your Stash</a><a href="#monetize">Partner Ready</a></div>
+</div></nav>
 <main>
 <section class="container hero">
-<div><span class="eyebrow">● Real offers. Official sources. Verified terms.</span><h1>There’s money out there.<br>We scout it.</h1><p class="lead">Bonus Scout brings signup offers into one place, explains the requirements in plain English, and helps you track each opportunity from discovery to reward.</p><div class="hero-actions"><button class="btn primary" onclick="document.querySelector('#offers').scrollIntoView()">Find Bonuses</button><button class="btn secondary" onclick="document.querySelector('#dashboard').scrollIntoView()">View Your Stash</button></div><div class="notice">All offers in this MVP were verified against official company pages on September 24, 2026. Offers can change or end without notice—always confirm the official terms before acting.</div></div>
-<aside class="panel hero-card"><div class="muted">Scout Value currently available in the verified starter database</div><div class="money">$1,306+</div><div class="muted">$2,820+ in advertised value, adjusted for usability, capital burden, time and difficulty.</div><div class="stats"><div class="stat"><strong>6</strong><span class="muted">Verified offers</span></div><div class="stat"><strong>4</strong><span class="muted">Categories</span></div><div class="stat"><strong>$0</strong><span class="muted">Monthly MVP cost</span></div></div></aside>
+<div>
+<span class="eyebrow">Verified from official sources • updated Sept. 24, 2026</span>
+<h1>There’s money out there.<br>We scout it.</h1>
+<p class="lead">Browse signup bonuses, welcome offers, free trials, and referral opportunities in one place. Every listing links back to an official source.</p>
+<div class="hero-actions"><button class="btn primary" onclick="document.querySelector('#offers').scrollIntoView()">Scout Offers</button><button class="btn secondary" onclick="document.querySelector('#dashboard').scrollIntoView()">Your Stash</button></div>
+<div class="notice"><b>Important:</b> Offers change quickly. Bonus Scout shows the verification date and official source so users can re-check live terms before applying.</div>
+</div>
+<aside class="panel hero-card">
+<div class="muted">Offer database</div>
+<div class="money" id="heroCount">100+</div>
+<div class="muted">Verified and source-linked opportunities</div>
+<div class="stats"><div class="stat"><strong id="categoryCount">—</strong><span class="muted">Categories</span></div><div class="stat"><strong id="affCount">—</strong><span class="muted">Affiliate/referral options</span></div><div class="stat"><strong>$0</strong><span class="muted">Hosting cost</span></div></div>
+</aside>
 </section>
 
-<section class="section"><div class="container">
-<div class="panel method">
-<h3>What is Scout Value?</h3>
-<p><b>Advertised Value</b> is the headline amount a company promotes. <b>Scout Value</b> is Bonus Scout's conservative estimate of the offer's practical value to a typical eligible user.</p>
-<div class="method-grid">
-<div class="method-item"><b>Cash equivalence</b>Cash is valued more highly than bonus bets, credits, discounts or free trials.</div>
-<div class="method-item"><b>Capital burden</b>Offers requiring large deposits receive a larger discount than low-cost offers.</div>
-<div class="method-item"><b>Time</b>Long qualification or payout periods reduce practical value.</div>
-<div class="method-item"><b>Difficulty & risk</b>Complex steps, wagering risk, investment requirements and renewal risk reduce value.</div>
+<section class="section" id="offers"><div class="container">
+<div class="section-head"><div><div class="muted">Live database</div><h2>Scout every offer</h2></div><div id="resultCount" class="muted"></div></div>
+<div class="toolbar">
+<input id="search" class="search" placeholder="Search company, card, bonus, category…">
+<select id="sort" class="select"><option value="score">Sort: Scout Score</option><option value="value">Advertised value</option><option value="lowspend">Lowest spend</option><option value="newest">Recently verified</option></select>
 </div>
-<p class="muted">Scout Value is an estimate—not a guarantee of profit, resale value, or cash received. The methodology can be refined as Bonus Scout grows.</p>
-</div></div></section>
+<div id="filters" class="filters"></div>
+<div id="offerGrid" class="grid"></div>
+<div id="loadMoreWrap" class="loadmore"><button id="loadMore" class="btn secondary">Load more offers</button></div>
+</div></section>
 
-<section class="section" id="offers"><div class="container"><div class="section-head"><div><div class="muted">Scout Picks</div><h2>Live offers</h2></div><div class="muted">Official source linked on every card</div></div><input id="search" class="search" placeholder="Search offers, companies or categories…"><div class="filters" id="filters"></div><div class="grid" id="offerGrid"></div></div></section>
-<section class="section" id="dashboard"><div class="container"><div class="section-head"><div><div class="muted">Your account</div><h2>Your Stash</h2></div><div class="muted">Saved locally on this device in the MVP</div></div><div class="dashboard"><aside class="panel side"><div class="kpi"><div class="muted">Completed Scout Value</div><div class="v" id="earned">$0</div></div><div class="kpi"><div class="muted">Pending Scout Value</div><div class="v" id="pending">$0</div></div><div class="kpi"><div class="muted">Available Scout Value</div><div class="v" id="available">$0</div></div></aside><div class="panel"><div class="tabs"><button class="tab active" onclick="dashFilter('all',this)">All</button><button class="tab" onclick="dashFilter('saved',this)">Saved</button><button class="tab" onclick="dashFilter('started',this)">Started</button><button class="tab" onclick="dashFilter('completed',this)">Completed</button></div><div id="dashboardBody"></div></div></div></div></section>
+<section class="section" id="monetize"><div class="container">
+<div class="panel method">
+<h3>Partner-ready monetization</h3>
+<p>Every listing has separate fields for the official source, an approved affiliate link, and an official affiliate/referral-program page where one is known. Bonus Scout never substitutes a personal or commercial tracking link unless you add one.</p>
+<div class="method-grid"><div><b>Official first</b><span>Fallback always goes to the provider.</span></div><div><b>Affiliate-ready</b><span>Approved links override the fallback.</span></div><div><b>Disclosure built in</b><span>Partner links are labeled on-card.</span></div><div><b>Click tracking</b><span>Outbound clicks are logged locally in this MVP.</span></div></div>
+</div>
+</div></section>
+
+<section class="section" id="dashboard"><div class="container">
+<div class="section-head"><div><div class="muted">Your account</div><h2>Your Stash</h2></div><div class="muted">Saved locally on this device</div></div>
+<div class="dashboard">
+<aside class="panel side"><div class="kpi"><span>Completed Scout Value</span><strong id="earned">$0</strong></div><div class="kpi"><span>Pending Scout Value</span><strong id="pending">$0</strong></div><div class="kpi"><span>Tracked offers</span><strong id="trackedCount">0</strong></div></aside>
+<div class="panel"><div class="tabs"><button class="tab active" data-tab="all">All</button><button class="tab" data-tab="saved">Saved</button><button class="tab" data-tab="started">Started</button><button class="tab" data-tab="completed">Completed</button></div><div id="dashboardBody"></div></div>
+</div>
+</div></section>
 </main>
-<footer><div class="container"><div class="legal"><b>Bonus Scout disclaimer:</b> Bonus Scout is an informational discovery and tracking tool. It is not a bank, broker, sportsbook, financial adviser, or gambling operator. Offer values shown are advertised maximums or stated promotional values and are not guarantees of profit or cash-equivalent value. Eligibility, taxes, geographic restrictions, account approval, investment risk, wagering risk and other terms may apply. Always read the official offer terms. Bonus Scout may later earn commissions from partner links; paid relationships should be clearly disclosed when implemented.</div><p>© 2026 Bonus Scout MVP.</p></div></footer>
-<script src="app.js"></script></body></html>
+<footer><div class="container"><div class="legal"><b>Disclosure:</b> Bonus Scout is an informational discovery and tracking tool. Offer terms, eligibility, approval, geographic restrictions, taxes, credit impacts, investment risk, wagering risk, auto-renewal terms, and other conditions can apply. Scout Value is an estimate and is not a guarantee of profit or cash-equivalent value. Bonus Scout may earn commissions from approved partner links, and monetized listings should be clearly disclosed.</div><p>© 2026 Bonus Scout.</p></div></footer>
+<script src="app.js"></script>
+</body></html>

@@ -1,28 +1,23 @@
-# Bonus Scout — Scout Value MVP
+# Bonus Scout 100+ Offer Build
 
-This version distinguishes between:
+This build contains **113** source-linked signup / welcome / trial / referral opportunities.
 
-- **Advertised Value**: the headline value promoted by the company.
-- **Scout Value**: Bonus Scout's conservative estimate of practical value after accounting for reward type, required capital, time, complexity, and risk.
-- **Scout Score**: a 0–100 attractiveness score for quickly comparing offers.
+## Data standard
+- Every listing has an `official_url`.
+- Every listing shows a verification date.
+- Exact numerical claims are used only where we captured a current public offer from the provider.
+- If an issuer personalizes or dynamically changes the offer, the site says `Live offer`, `Varies`, or `See live terms` instead of inventing an amount.
+- Affiliate/referral program URLs are included only where we identified an official program page. An `affiliate_url` remains blank until you are actually approved.
 
-All offers in this starter build were verified against official company pages on September 24, 2026. Promotions can change at any time, so each card links to official terms.
-
-## Upload to GitHub Pages
-Upload the CONTENTS of this folder to the top level of your GitHub repository:
+## Updating GitHub
+Upload these files to the root of your repo and overwrite the older copies:
 - index.html
 - styles.css
 - app.js
 - offers.json
-- README.md
 - .nojekyll
 
-Do not upload only the zip file if you want GitHub Pages to publish the site.
+GitHub Pages will redeploy after the commit.
 
-Then:
-1. Repository Settings
-2. Pages
-3. Source: Deploy from a branch
-4. Branch: main
-5. Folder: /(root)
-6. Save
+## Important
+This is a rapidly changing database. Re-verify offers regularly, especially sportsbooks, bank bonuses, credit-card welcome offers, and subscription trials.
