@@ -59,3 +59,9 @@ MYSTERY PACKS BONUS-ONLY UPDATE
 - Only mystery-pack entries with a verified current bonus, signup offer, free pack/box, discount, or signup credit were kept.
 - Removed 34 mystery-pack listings that did not have a verified current bonus.
 - Remaining mystery-pack listings: 13
+
+
+FINAL MYSTERY PACK TAB FIX
+- Mystery Packs is now a normal category tab alongside the other offer categories.
+- No special Mystery Packs section is used.
+- This build contains 13 bonus-qualified Mystery Pack offers.

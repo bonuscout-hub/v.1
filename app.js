@@ -16,8 +16,12 @@ async function init(){
   document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');dashFilter=t.dataset.tab;renderDash()});
 }
 function buildFilters(){
- const cats=['All',...new Set(OFFERS.map(o=>o.category))];
- document.getElementById('filters').innerHTML=cats.map(c=>`<button class="filter ${c==='All'?'active':''}" onclick="setCat('${c}',this)">${c}</button>`).join('');
+ const presentCats=[...new Set(OFFERS.map(o=>o.category).filter(Boolean))];
+ const preferredOrder=['All','Credit Cards','Banking','Investing','Sports','Mystery Packs','Travel','Shopping','Subscriptions','Apps','Education','Food','Collectibles'];
+ const ordered=['All'];
+ preferredOrder.slice(1).forEach(c=>{if(presentCats.includes(c))ordered.push(c);});
+ presentCats.filter(c=>!ordered.includes(c)).sort().forEach(c=>ordered.push(c));
+ document.getElementById('filters').innerHTML=ordered.map(c=>`<button class="filter ${c==='All'?'active':''}" onclick="setCat('${c.replace(/'/g,"\\'")}',this)">${c}</button>`).join('');
 }
 function setCat(c,el){cat=c;visible=24;document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));el.classList.add('active');renderOffers()}
 function currentList(){
