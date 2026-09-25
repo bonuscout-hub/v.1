@@ -13,3 +13,11 @@ nav{position:sticky;top:0;z-index:20;background:rgba(6,16,24,.9);backdrop-filter
 .counter-status{font-size:11px;color:#78909e;margin-top:12px;line-height:1.4}
 .community-stats .stat strong{font-variant-numeric:tabular-nums}
 .community-stats .stat:nth-child(3) strong{color:#86efb7}
+.accent-text{color:var(--accent)}
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.how-card{padding:18px}.how-card b,.how-card span{display:block}.how-card b{font-size:16px}.how-card span{color:var(--muted);font-size:13px;line-height:1.45;margin-top:8px}
+.quick{display:grid;gap:7px}.quick>div{background:#08141c;border:1px solid #1b3140;border-radius:10px;padding:9px}.quick span{display:block;color:#7f99a8;font-size:9px;font-weight:900;letter-spacing:.09em}.quick b{display:block;font-size:12px;line-height:1.35;margin-top:3px}.quick .catch{border-color:#5b4921;background:#201a0b}.quick .catch span{color:#ffd166}.risk-note{font-size:11px;line-height:1.45;padding:10px;border-radius:10px;background:#182032;border:1px solid #303f64;color:#cdd8f5}.protect{background:#32290f;color:#ffe39a}.sponsored{background:#33223c;color:#efc6ff}
+footer a{color:#a9f0c8}.score{font-size:13px}.logo{font-family:Georgia,serif;font-weight:900}
+@media(max-width:900px){.how-grid{grid-template-columns:1fr 1fr}}@media(max-width:620px){.how-grid{grid-template-columns:1fr}}
+.score-note{font-size:12px;line-height:1.45;color:#78909c;margin-top:-4px;margin-bottom:10px}
+.mystery-tool{margin:12px 0 22px;padding:16px;border:1px solid var(--line,#20303c);border-radius:16px;background:rgba(255,255,255,.025)}
+.mystery-tool>div:first-child{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:10px}.mystery-tool span{color:#8ea4b1;font-size:13px}.mystery-filters{margin:0}.mystery-sub{font-size:12px;padding:8px 11px}.badge.dealready{background:rgba(77,208,225,.12);border-color:rgba(77,208,225,.35);color:#8eeaf4}.partner-note{margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(77,208,225,.06);border:1px solid rgba(77,208,225,.18);font-size:12px;line-height:1.45;color:#a9c3cf}

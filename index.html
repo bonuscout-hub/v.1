@@ -2,57 +2,67 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bonus Scout — Find signup bonuses and track your stash</title>
-<meta name="description" content="Discover verified signup offers, welcome bonuses, trials, and referral opportunities from official sources.">
-<link rel="stylesheet" href="styles-v2.css?v=2">
+<title>Cash Cacher — Find the cash. We tell you the catch.</title>
+<meta name="description" content="Find legitimate signup bonuses, cash rewards, free packs and welcome offers. Cash Cacher shows what you get, what you do, and the catch.">
+<meta name="theme-color" content="#071019">
+<meta property="og:title" content="Cash Cacher — Find the cash. We tell you the catch.">
+<meta property="og:description" content="Verified bonuses, rewards and pack offers with the catch explained.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles-v2.css?v=3">
 </head>
 <body>
 <nav><div class="container nav">
-<a class="brand" href="#"><span class="logo">⌖</span>Bonus Scout</a>
-<div class="navlinks"><a href="#offers">Offers</a><a href="#dashboard">Your Stash</a></div>
+<a class="brand" href="#"><span class="logo">$</span><span>Cash Cacher</span></a>
+<div class="navlinks"><a href="#offers">Cash Caches</a><a href="#how">How it works</a><a href="#dashboard">My Cache</a></div>
 </div></nav>
 <main>
 <section class="container hero">
 <div>
-<span class="eyebrow">Verified from official sources • updated Sept. 24, 2026</span>
-<h1>There’s money out there.<br>We scout it.</h1>
-<p class="lead">Browse signup bonuses, welcome offers, free trials, and referral opportunities in one place. Every listing links back to an official source.</p>
-<div class="hero-actions"><button class="btn primary" onclick="document.querySelector('#offers').scrollIntoView()">Scout Offers</button><button class="btn secondary" onclick="document.querySelector('#dashboard').scrollIntoView()">Your Stash</button></div>
-<div class="notice"><b>Important:</b> Offers change quickly. Bonus Scout shows the verification date and official source so users can re-check live terms before applying.</div>
+<span class="eyebrow">Independent offer discovery • terms verified from source links</span>
+<h1>Find the cash.<br><span class="accent-text">Know the catch.</span></h1>
+<p class="lead">Cash Cacher finds signup bonuses, real-cash rewards, free packs, welcome credits and other claimable value — then shows you <b>what you get, what you do, and the catch</b>.</p>
+<div class="hero-actions"><button class="btn primary" onclick="document.querySelector('#offers').scrollIntoView()">Find Cash Caches</button><button class="btn secondary" onclick="document.querySelector('#dashboard').scrollIntoView()">My Cache</button></div>
+<div class="notice"><b>We tell you the catch.</b> Offers change quickly. Every listing shows a verification date and source link so you can re-check live terms before you act.</div>
 </div>
 <aside class="panel hero-card">
 <div class="muted">Offer database</div>
 <div class="money" id="heroCount">100+</div>
-<div class="muted">Verified and source-linked opportunities</div>
+<div class="muted">source-linked opportunities in the expanded launch database</div>
 <div class="stats community-stats">
 <div class="stat"><strong id="visitorCount">1</strong><span class="muted">Visitors</span></div>
-<div class="stat"><strong id="completedCount">0</strong><span class="muted">Offers completed</span></div>
-<div class="stat"><strong id="earnedCount">$0</strong><span class="muted">Est. rewards earned</span></div>
+<div class="stat"><strong id="completedCount">0</strong><span class="muted">Caches claimed</span></div>
+<div class="stat"><strong id="earnedCount">$0</strong><span class="muted">Est. value claimed</span></div>
 </div>
 <div id="counterStatus" class="counter-status">Preview mode · connect Supabase later for community-wide totals.</div>
 </aside>
 </section>
 
 <section class="section" id="offers"><div class="container">
-<div class="section-head"><div><div class="muted">Live database</div><h2>Scout every offer</h2></div><div id="resultCount" class="muted"></div></div>
+<div class="section-head"><div><div class="muted">Live database</div><h2>Find your next cash cache</h2></div><div id="resultCount" class="muted"></div></div>
 <div class="toolbar">
 <input id="search" class="search" placeholder="Search company, card, bonus, category…">
-<select id="sort" class="select"><option value="score">Sort: Scout Score</option><option value="value">Advertised value</option><option value="lowspend">Lowest spend</option><option value="newest">Recently verified</option></select>
+<select id="sort" class="select"><option value="score">Sort: Cash Score</option><option value="value">Advertised value</option><option value="lowspend">Lowest spend</option><option value="newest">Recently verified</option></select>
 </div>
-<div id="filters" class="filters"></div>
+<div id="filters" class="filters"></div><div class="mystery-tool"><div><b>Mystery Pack Lab</b><span>Compare free packs, buyback protection, cash-out and brand-deal-ready platforms.</span></div><div id="mysteryFilters" class="filters mystery-filters"></div></div>
 <div id="offerGrid" class="grid"></div>
 <div id="loadMoreWrap" class="loadmore"><button id="loadMore" class="btn secondary">Load more offers</button></div>
 </div></section>
 
+<section class="section" id="how"><div class="container">
+<div class="section-head"><div><div class="muted">Our standard</div><h2>We don’t just show the bonus. We show the catch.</h2></div></div>
+<div class="how-grid"><div class="panel how-card"><b>1 · What you get</b><span>Cash, points, credit, packs or other advertised value.</span></div><div class="panel how-card"><b>2 · What you do</b><span>Spend, deposit, sign up, subscribe or complete the qualifying action.</span></div><div class="panel how-card"><b>3 · The catch</b><span>Eligibility, geography, deadlines, fees, valuation rules and other restrictions.</span></div><div class="panel how-card"><b>4 · Cash Score</b><span>Our editorial score weighs value, effort, upfront cash, timing, restrictions and verification confidence.</span></div></div>
+</div></section>
+
 <section class="section" id="dashboard"><div class="container">
-<div class="section-head"><div><div class="muted">Your account</div><h2>Your Stash</h2></div><div class="muted">Saved locally on this device</div></div>
+<div class="section-head"><div><div class="muted">Your account</div><h2>My Cache</h2></div><div class="muted">Saved locally on this device</div></div>
 <div class="dashboard">
-<aside class="panel side"><div class="kpi"><span>Completed Scout Value</span><strong id="earned">$0</strong></div><div class="kpi"><span>Pending Scout Value</span><strong id="pending">$0</strong></div><div class="kpi"><span>Tracked offers</span><strong id="trackedCount">0</strong></div></aside>
+<aside class="panel side"><div class="kpi"><span>Completed Cash Value</span><strong id="earned">$0</strong></div><div class="kpi"><span>Pending Cash Value</span><strong id="pending">$0</strong></div><div class="kpi"><span>Tracked offers</span><strong id="trackedCount">0</strong></div></aside>
 <div class="panel"><div class="tabs"><button class="tab active" data-tab="all">All</button><button class="tab" data-tab="saved">Saved</button><button class="tab" data-tab="started">Started</button><button class="tab" data-tab="completed">Completed</button></div><div id="dashboardBody"></div></div>
 </div>
 </div></section>
 </main>
-<footer><div class="container"><div class="legal"><b>Disclosure:</b> Bonus Scout is an informational discovery and tracking tool. Offer terms, eligibility, approval, geographic restrictions, taxes, credit impacts, investment risk, wagering risk, auto-renewal terms, and other conditions can apply. Scout Value is an estimate and is not a guarantee of profit or cash-equivalent value. Some links may be affiliate links, which means Bonus Scout may earn a commission at no additional cost to you.</div><p>© 2026 Bonus Scout.</p></div><div style="text-align:center;font-size:10px;color:#4f6673;padding-bottom:12px">Build: mystery-pack-v2</div></footer>
+<footer><div class="container"><div class="legal"><b>Disclosure:</b> Cash Cacher is an independent informational discovery and tracking tool. Offer terms, eligibility, approval, geographic restrictions, taxes, credit impacts, investment risk, wagering risk, auto-renewal terms, and other conditions can apply. Cash Value is an editorial estimate and is not a guarantee of profit or cash-equivalent value. Some links may be affiliate links, which means Cash Cacher may earn a commission at no additional cost to you.</div><p>© 2026 Cash Cacher. <a href="disclosure.html">Affiliate Disclosure</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p></div><div style="text-align:center;font-size:10px;color:#4f6673;padding-bottom:12px">Build: cash-cacher-launch-v3-mystery-expansion</div></footer>
 <script src="config.js"></script>
-<script src="app-v2.js?v=2"></script>
+<script src="app-v2.js?v=3"></script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}));}</script>
 </body></html>

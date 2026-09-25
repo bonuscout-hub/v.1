@@ -1,3 +1,2 @@
-// Reserved for the future live community-counter backend.
-// No setup is required for the website to work right now.
-window.BONUS_SCOUT_CONFIG = {};
+// Cash Cacher launch configuration. Add approved affiliate URLs only after acceptance.
+window.CASH_CACHER_CONFIG = { brand: 'Cash Cacher' };
