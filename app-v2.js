@@ -29,7 +29,7 @@ function setCat(c,el){cat=c;mysteryMode='all';visible=24;document.querySelectorA
 
 function buildMysteryFilters(){
  const host=document.getElementById('mysteryFilters'); if(!host)return;
- const modes=[['all','All mystery packs'],['free','Free / signup'],['protected','Buyback / protected'],['partner','Affiliate / creator'],['cashout','Cash-out'],['credit','Site credit']];
+ const modes=[['all','All mystery packs'],['free','Free / signup'],['protected','Buyback / protected'],['cashout','Cash-out'],['credit','Site credit']];
  host.innerHTML=modes.map(([k,l])=>`<button class="filter mystery-sub ${k==='all'?'active':''}" data-mode="${k}">${l}</button>`).join('');
  host.querySelectorAll('button').forEach(b=>b.onclick=()=>{mysteryMode=b.dataset.mode;host.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active');cat='Mystery Packs';document.querySelectorAll('.filter[data-cat]').forEach(x=>x.classList.toggle('active',x.dataset.cat==='Mystery Packs'));visible=24;renderOffers();});
 }
@@ -38,7 +38,6 @@ function mysteryMatch(o){
  const t=((o.tags||[]).join(' ')+' '+(o.reward_display||'')+' '+(o.risk_protection||'')+' '+(o.affiliate_note||'')).toLowerCase();
  if(mysteryMode==='free') return /free|signup|welcome|debut|referral/.test(t);
  if(mysteryMode==='protected') return Boolean(o.risk_protection)||/buyback|sellback|protected|guarantee|fmv/.test(t);
- if(mysteryMode==='partner') return Boolean(o.affiliate_program_url)||/affiliate|ambassador|creator|partner/.test(t);
  if(mysteryMode==='cashout') return /cashout|cash-out|cash back|withdraw|usd|usdc/.test(t);
  if(mysteryMode==='credit') return /site-credit|site credit|gems|ticket|store credit/.test(t);
  return true;
@@ -60,20 +59,18 @@ function renderOffers(){
  document.getElementById('loadMoreWrap').style.display=a.length>visible?'block':'none';
 }
 function card(o){
- const partner=o.affiliate_program_url||o.referral_program_url||o.affiliate_url;
- const brandDeal=o.category==='Mystery Packs'&&(o.contact_email||o.contact_url||partner);
  const protectedPack=Boolean(o.risk_protection);
  const paid=o.sponsored===true;
  const spend=o.required_spend==null?'See terms':money(o.required_spend);
  return `<article class="card">
- <div class="brandline"><span class="badge">${o.category}</span>${paid?'<span class="badge sponsored">Sponsored</span>':partner?'<span class="badge partner">Partner path</span>':''}${protectedPack?'<span class="badge protect">Protection terms</span>':''}${brandDeal?'<span class="badge dealready">Brand-deal path</span>':''}</div>
+ <div class="brandline"><span class="badge">${o.category}</span>${paid?'<span class="badge sponsored">Sponsored</span>':''}${protectedPack?'<span class="badge protect">Protection terms</span>':''}</div>
  <div><div class="muted">${o.brand}</div><h3>${o.title}</h3></div>
  <div class="offer-title">${o.reward_display}</div>
  <div class="value-pair"><div class="value-box"><span>Advertised value</span><strong>${o.reward_value==null?'Varies':money(o.reward_value)}</strong></div><div class="value-box scout"><span>Cash Value</span><strong>${cashText(o)}</strong></div></div>
  <div class="score">Cash Score ${Number(o.cash_score||0).toFixed(1)}/10</div><div class="score-note">${o.score_basis||''}</div>
  <div class="quick"><div><span>WHAT YOU GET</span><b>${o.reward_display}</b></div><div><span>WHAT YOU DO</span><b>${spend==='See terms'?'Check qualifying terms':'Qualify with '+spend}</b></div><div class="catch"><span>THE CATCH</span><b>${o.eligibility}</b></div></div><div class="desc">${o.description}</div>${o.risk_protection?`<div class="risk-note"><b>Protection note:</b> ${o.risk_protection}</div>`:''}
  <div class="meta"><div><b>Qualifying amount</b><br>${spend}</div><div><b>Timing</b><br>${o.time}</div><div><b>Reward type</b><br>${o.reward_type}</div><div><b>Eligibility</b><br>${o.eligibility}</div></div>
- <div class="verify">✓ ${o.verification_level} · Verified ${o.verified}</div>${o.category==='Mystery Packs'&&o.affiliate_note?`<div class="partner-note"><b>Partnership path:</b> ${o.affiliate_note}</div>`:''}
+ <div class="verify">✓ ${o.verification_level} · Verified ${o.verified}</div>
  <div class="actions"><a class="btn secondary small" target="_blank" rel="noopener" href="${o.official_url}">Official Terms</a><button class="btn secondary small" onclick="track('${o.id}','saved')">Save</button><button class="btn primary small" onclick="start('${o.id}')">Start Offer</button></div>
  </article>`;
 }
