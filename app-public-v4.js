@@ -79,6 +79,17 @@ function startfunction start(id){
  const o=OFFERS.find(x=>x.id===id);
  if(!o)return;
 
+ function track(id,status){
+ const p=getP();
+ p[id]=status;
+ setP(p);
+ renderDash();
+}
+
+function start(id){
+ const o=OFFERS.find(x=>x.id===id);
+ if(!o)return;
+
  // Existing Cash Cacher local tracking
  track(id,'started');
 
@@ -92,7 +103,7 @@ function startfunction start(id){
 
  localStorage.setItem(CLICKS,JSON.stringify(clicks));
 
- // NEW: Send outbound click to Supabase
+ // Send outbound click to Supabase
  if(typeof window.trackOfferClick === 'function'){
    window.trackOfferClick({
      id:o.id,
@@ -108,10 +119,18 @@ function startfunction start(id){
    'noopener,noreferrer'
  );
 }
+
+function complete(id){
+ track(id,'completed');
+ renderCommunityCounters();
 }
-function complete(id){track(id,'completed');renderCommunityCounters()}
-function removeTracked(id){const p=getP();delete p[id];setP(p);renderDash()}
-function renderDash(){
+
+function removeTracked(id){
+ const p=getP();
+ delete p[id];
+ setP(p);
+ renderDash();
+}
  const p=getP();
  let items=OFFERS.filter(o=>p[o.id]);
  if(dashFilter!=='all')items=items.filter(o=>p[o.id]===dashFilter);
