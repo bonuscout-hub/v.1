@@ -75,13 +75,39 @@ function card(o){
  </article>`;
 }
 function track(id,status){const p=getP();p[id]=status;setP(p);renderDash()}
-function start(id){
- const o=OFFERS.find(x=>x.id===id); if(!o)return;
+function startfunction start(id){
+ const o=OFFERS.find(x=>x.id===id);
+ if(!o)return;
+
+ // Existing Cash Cacher local tracking
  track(id,'started');
+
  const clicks=JSON.parse(localStorage.getItem(CLICKS)||'[]');
- clicks.push({offer_id:id,at:new Date().toISOString(),monetized:Boolean(o.affiliate_url)});
+
+ clicks.push({
+   offer_id:id,
+   at:new Date().toISOString(),
+   monetized:Boolean(o.affiliate_url)
+ });
+
  localStorage.setItem(CLICKS,JSON.stringify(clicks));
- window.open(o.affiliate_url||o.official_url,'_blank','noopener,noreferrer');
+
+ // NEW: Send outbound click to Supabase
+ if(typeof window.trackOfferClick === 'function'){
+   window.trackOfferClick({
+     id:o.id,
+     name:o.title || o.brand || 'Unknown Offer',
+     category:o.category || null
+   });
+ }
+
+ // Continue to offer immediately
+ window.open(
+   o.affiliate_url || o.official_url,
+   '_blank',
+   'noopener,noreferrer'
+ );
+}
 }
 function complete(id){track(id,'completed');renderCommunityCounters()}
 function removeTracked(id){const p=getP();delete p[id];setP(p);renderDash()}
