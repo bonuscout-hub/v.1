@@ -353,199 +353,115 @@ function card(o){
 // ==========================================
 
 function track(id,status){
-  const p=getP();
-
-  p[id]=status;
-
-  setP(p);
-
-  renderDash();
+ const p=getP();
+ p[id]=status;
+ setP(p);
+ renderDash();
 }
-
-
-// ==========================================
-// START OFFER + SUPABASE CLICK TRACKING
-// ==========================================
 
 function start(id){
+ const o=OFFERS.find(x=>x.id===id);
+ if(!o)return;
 
-  const o=OFFERS.find(x=>x.id===id);
+ track(id,'started');
 
-  if(!o) return;
+ const clicks=JSON.parse(localStorage.getItem(CLICKS)||'[]');
 
-  // Existing local Cash Cacher tracking
-  track(id,'started');
+ clicks.push({
+  offer_id:id,
+  at:new Date().toISOString(),
+  monetized:Boolean(o.affiliate_url)
+ });
 
-  const clicks=
-    JSON.parse(localStorage.getItem(CLICKS)||'[]');
+ localStorage.setItem(CLICKS,JSON.stringify(clicks));
 
-  clicks.push({
-    offer_id:id,
-    at:new Date().toISOString(),
-    monetized:Boolean(o.affiliate_url)
-  });
+ // Supabase tracking — failure will NOT block the offer
+ if(typeof window.trackOfferClick==='function'){
+  window.trackOfferClick({
+   id:o.id,
+   name:o.title||o.brand||'Unknown Offer',
+   category:o.category||null
+  }).catch(err=>console.warn('Tracking failed:',err));
+ }
 
-  localStorage.setItem(
-    CLICKS,
-    JSON.stringify(clicks)
-  );
-
-
-  // ----------------------------------------
-  // Supabase outbound-click tracking
-  // ----------------------------------------
-
-  if(typeof window.trackOfferClick==='function'){
-
-    window.trackOfferClick({
-      id:o.id,
-      name:o.title || o.brand || 'Unknown Offer',
-      category:o.category || null
-    });
-
-  }
-
-
-  // ----------------------------------------
-  // Open the offer
-  // ----------------------------------------
-
-  window.open(
-    o.affiliate_url || o.official_url,
-    '_blank',
-    'noopener,noreferrer'
-  );
+ window.open(
+  o.affiliate_url||o.official_url,
+  '_blank',
+  'noopener,noreferrer'
+ );
 }
-
 
 function complete(id){
-
-  track(id,'completed');
-
-  renderCommunityCounters();
-
+ track(id,'completed');
+ renderCommunityCounters();
 }
-
 
 function removeTracked(id){
-
-  const p=getP();
-
-  delete p[id];
-
-  setP(p);
-
-  renderDash();
-
+ const p=getP();
+ delete p[id];
+ setP(p);
+ renderDash();
 }
-
-
-// ==========================================
-// USER DASHBOARD
-// ==========================================
 
 function renderDash(){
+ const p=getP();
 
-  const p=getP();
+ let items=OFFERS.filter(o=>p[o.id]);
 
-  let items=
-    OFFERS.filter(o=>p[o.id]);
+ if(dashFilter!=='all'){
+  items=items.filter(o=>p[o.id]===dashFilter);
+ }
 
-  if(dashFilter!=='all'){
+ const earned=OFFERS
+  .filter(o=>p[o.id]==='completed')
+  .reduce((s,o)=>s+(o.cash_value||0),0);
 
-    items=
-      items.filter(
-        o=>p[o.id]===dashFilter
-      );
+ const pending=OFFERS
+  .filter(o=>p[o.id]==='started')
+  .reduce((s,o)=>s+(o.cash_value||0),0);
 
-  }
+ document.getElementById('earned').textContent=money(earned);
+ document.getElementById('pending').textContent=money(pending);
+ document.getElementById('trackedCount').textContent=
+  OFFERS.filter(o=>p[o.id]).length;
 
+ document.getElementById('dashboardBody').innerHTML=
+  items.length
+  ? items.map(o=>`
+   <div class="offer-row">
+    <div>
+     <b>${o.brand}</b>
+     <div class="muted">${o.title}</div>
+    </div>
 
-  const earned=
-    OFFERS
-      .filter(o=>p[o.id]==='completed')
-      .reduce(
-        (s,o)=>s+(o.cash_value||0),
-        0
-      );
+    <div>
+     ${cashText(o)}
+     <div class="muted">Cash Value</div>
+    </div>
 
+    <div>
+     <span class="status">${p[o.id]}</span>
+    </div>
 
-  const pending=
-    OFFERS
-      .filter(o=>p[o.id]==='started')
-      .reduce(
-        (s,o)=>s+(o.cash_value||0),
-        0
-      );
+    <div>
+     ${
+      p[o.id]==='started'
+      ? `<button class="btn primary small"
+          onclick="complete('${o.id}')">
+          Complete
+         </button>`
+      : ''
+     }
 
-
-  document.getElementById('earned').textContent=
-    money(earned);
-
-  document.getElementById('pending').textContent=
-    money(pending);
-
-  document.getElementById('trackedCount').textContent=
-    OFFERS.filter(o=>p[o.id]).length;
-
-
-  document.getElementById('dashboardBody').innerHTML=
-
-    items.length
-
-    ?items.map(o=>
-
-      `<div class="offer-row">
-
-        <div>
-          <b>${o.brand}</b>
-          <div class="muted">
-            ${o.title}
-          </div>
-        </div>
-
-        <div>
-          ${cashText(o)}
-          <div class="muted">
-            Cash Value
-          </div>
-        </div>
-
-        <div>
-          <span class="status">
-            ${p[o.id]}
-          </span>
-        </div>
-
-        <div>
-
-          ${
-            p[o.id]==='started'
-              ?`<button
-                  class="btn primary small"
-                  onclick="complete('${o.id}')">
-                  Complete
-                </button>`
-              :''
-          }
-
-          <button
-            class="btn secondary small"
-            onclick="removeTracked('${o.id}')">
-            Remove
-          </button>
-
-        </div>
-
-      </div>`
-
-    ).join('')
-
-    :'<div class="empty">Your Cache is empty. Save or start an offer above.</div>';
-
+     <button class="btn secondary small"
+      onclick="removeTracked('${o.id}')">
+      Remove
+     </button>
+    </div>
+   </div>
+  `).join('')
+  : '<div class="empty">Your Cache is empty. Save or start an offer above.</div>';
 }
-
-
 // ==========================================
 // COMMUNITY COUNTERS
 // ==========================================
